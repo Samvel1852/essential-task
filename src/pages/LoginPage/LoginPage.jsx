@@ -59,7 +59,7 @@ const validationSchema = yup.object({
     .required("Password is required"),
 });
 
-export default function LoginPage({ setLoggedUser }) {
+export default function LoginPage({ setLoggedUser, loggedUser }) {
   const [errorSignUp, setErrorSignUp] = useState(false);
 
   const classes = useStyles();
@@ -95,8 +95,10 @@ export default function LoginPage({ setLoggedUser }) {
           values.password === users.user2.password)
       ) {
         if (values.userName === users.user1.userName) {
+          setLocalStorage("currentUser", users.user1);
           setLoggedUser({ userName: users.user1.userName, isLogged: true });
         } else {
+          setLocalStorage("currentUser", users.user2);
           setLoggedUser({ userName: users.user2.userName, isLogged: true });
         }
         history.push(`${Routes.homePage.url}`);
@@ -106,7 +108,7 @@ export default function LoginPage({ setLoggedUser }) {
     },
   });
 
-  return getLocalStorage(storage.isAuth) ? (
+  return loggedUser.isLogged ? (
     <Redirect to={Routes.homePage.url} />
   ) : (
     <Container component="main" maxWidth="xs">

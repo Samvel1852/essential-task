@@ -4,9 +4,18 @@
   margin-bottom: 10px;
 }
 
-h1 {
+.title {
   text-align: center;
   color: white;
+}
+
+.user {
+  text-align: center;
+}
+
+.logoutContainer {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .list {

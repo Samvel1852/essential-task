@@ -5,6 +5,10 @@ import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
 import List from "../../components/List/List";
 import { Routes } from "../../constants/routes";
+import {
+  getLocalStorage,
+  removeFromLocalStorage,
+} from "../../helpers/localStorage";
 import styles from "./HomePage.module.css";
 
 export default function Todo({ setLoggedUser, loggedUser }) {
@@ -13,6 +17,10 @@ export default function Todo({ setLoggedUser, loggedUser }) {
   const [count, setCount] = useState(0);
   const [listInputValue, setListInputValue] = useState("");
   const [todoMenu, setTodoMenu] = useState([]);
+
+  useEffect(() => {
+    setLoggedUser({ ...getLocalStorage("currentUser"), isLogged: true });
+  }, []);
 
   const onHandleChange = (el) => {
     setTodoList(el.target.value);
@@ -82,6 +90,11 @@ export default function Todo({ setLoggedUser, loggedUser }) {
     setTodoMenu(list.filter((todo) => todo.isActive === false));
   };
 
+  const handleLogout = () => {
+    setLoggedUser({ userName: "", isLogged: false });
+    removeFromLocalStorage("currentUser");
+  };
+
   return loggedUser.isLogged ? (
     <div
       style={{
@@ -92,7 +105,13 @@ export default function Todo({ setLoggedUser, loggedUser }) {
         backgroundColor: "#856d4d",
       }}
     >
-      <h1>Todo List</h1>
+      <div className={styles.logoutContainer}>
+        <Button handleClick={() => handleLogout()} text="log out" />
+      </div>
+      <h2 className={styles.user}>
+        {loggedUser.name} {loggedUser.surname}
+      </h2>
+      <h1 className={styles.title}>Todo List</h1>
 
       <div className={styles.todo}>
         <Input
