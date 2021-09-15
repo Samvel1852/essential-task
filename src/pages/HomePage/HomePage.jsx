@@ -18,6 +18,10 @@ export default function Todo({
   setTodoMenu,
   todoMenu,
 }) {
+  const [errorPlaceholder, setErrorPlaceholder] = useState({
+    error: "Please fill the field",
+    visible: false,
+  });
   const [todoList, setTodoList] = useState();
   const [list, setList] = useState(
     getLocalStorage(`${loggedUser.userName}Todo`)
@@ -38,6 +42,7 @@ export default function Todo({
 
   const onHandleChange = (el) => {
     setTodoList(el.target.value);
+    setErrorPlaceholder({ ...errorPlaceholder, visible: false });
   };
 
   const onHandleClick = (e) => {
@@ -53,7 +58,10 @@ export default function Todo({
         },
         ...list,
       ]);
+    } else {
+      setErrorPlaceholder({ ...errorPlaceholder, visible: true });
     }
+    setTodoList("");
     console.log("list", list);
   };
 
@@ -133,6 +141,8 @@ export default function Todo({
         <Input
           style={{ backgroundColor: "#BDB76B" }}
           onChange={(el) => onHandleChange(el)}
+          value={todoList}
+          placeholder={errorPlaceholder.visible && errorPlaceholder.error}
         />
         <Button
           style={{ padding: "12px", width: "80px" }}

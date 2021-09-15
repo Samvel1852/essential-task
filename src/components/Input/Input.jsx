@@ -7,6 +7,7 @@ export default function Input({
   value,
   readOnly,
   style,
+  placeholder,
 }) {
   return (
     <input
@@ -18,6 +19,7 @@ export default function Input({
       value={value}
       readOnly={readOnly}
       style={style}
+      placeholder={placeholder}
     ></input>
   );
 }
