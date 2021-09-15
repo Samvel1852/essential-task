@@ -103,7 +103,7 @@ export default function LoginPage({ setLoggedUser, loggedUser }) {
         }
         history.push(`${Routes.homePage.url}`);
       } else {
-        setErrorSignUp(!errorSignUp);
+        setErrorSignUp(true);
       }
     },
   });

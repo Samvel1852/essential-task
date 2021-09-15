@@ -142,7 +142,7 @@ export default function Todo({
           style={{ backgroundColor: "#BDB76B" }}
           onChange={(el) => onHandleChange(el)}
           value={todoList}
-          placeholder={errorPlaceholder.visible && errorPlaceholder.error}
+          placeholder={!errorPlaceholder.visible ? "" : errorPlaceholder.error}
         />
         <Button
           style={{ padding: "12px", width: "80px" }}
