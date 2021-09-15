@@ -84,10 +84,10 @@ export default function Todo({
     console.log(todoMenu);
   };
 
-  const onActiveInput = (todoList) => {
+  const onActiveToggle = (todoList) => {
     setList(
       list.map((todo) =>
-        todo.id === todoList.id ? { ...todo, isActive: false } : todo
+        todo.id === todoList.id ? { ...todo, isActive: !todo.isActive } : todo
       )
     );
   };
@@ -160,33 +160,36 @@ export default function Todo({
         />
       </div>
       <div className={styles.list}>
-        {todoMenu.length
-          ? todoMenu.map((el, i) => (
-              <div className={styles.listRow} key={i}>
-                <List
-                  onChange={(evt) => changeListInput(evt, el)}
-                  onEdit={() => onEditInput(el)}
-                  onDelate={() => delateInput(el.id)}
-                  onActive={() => onActiveInput(el)}
-                  edit={el.edited ? "Save" : "Edit"}
-                  delate="Delate"
-                  save="Save"
-                  done="Done"
-                  value={el.name}
-                  readOnly={el.readOnly}
-                  className={styles.inputs}
-                  style={
-                    el.isActive === false
-                      ? {
-                          backgroundColor: "#c3b091",
-                          textDecoration: "line-through",
-                        }
-                      : { backgroundColor: "#a99a86" }
-                  }
-                />
-              </div>
-            ))
-          : null}
+        {
+          (console.log("todoMenu", todoMenu),
+          todoMenu.length
+            ? todoMenu.map((el, i) => (
+                <div className={styles.listRow} key={i}>
+                  <List
+                    onChange={(evt) => changeListInput(evt, el)}
+                    onEdit={() => onEditInput(el)}
+                    onDelate={() => delateInput(el.id)}
+                    onActiveToggle={() => onActiveToggle(el)}
+                    edit={el.edited ? "Save" : "Edit"}
+                    delate="Delate"
+                    save="Save"
+                    done={el.isActive ? "Done" : "Undone"}
+                    value={el.name}
+                    readOnly={el.readOnly}
+                    className={styles.inputs}
+                    style={
+                      el.isActive === false
+                        ? {
+                            backgroundColor: "#c3b091",
+                            textDecoration: "line-through",
+                          }
+                        : { backgroundColor: "#a99a86" }
+                    }
+                  />
+                </div>
+              ))
+            : null)
+        }
       </div>
     </div>
   ) : (

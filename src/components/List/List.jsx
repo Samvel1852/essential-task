@@ -12,7 +12,7 @@ export default function List({
   save,
   style,
   done,
-  onActive,
+  onActiveToggle,
 }) {
   return (
     <div>
@@ -25,7 +25,7 @@ export default function List({
       <Button text={edit} handleClick={onEdit} />
       {/* <Button text={save} handleClick={onSave} /> */}
       <Button text={delate} handleClick={onDelate} />
-      <Button text={done} handleClick={onActive} />
+      <Button text={done} handleClick={onActiveToggle} />
     </div>
   );
 }
