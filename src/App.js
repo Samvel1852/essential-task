@@ -14,6 +14,9 @@ import { storage } from "./constants/storage";
 import HomePage from "./pages/HomePage/HomePage";
 
 function App() {
+  const [todoMenu, setTodoMenu] = useState(
+    getLocalStorage("todo") ? getLocalStorage("todo") : []
+  );
   const [loggedUser, setLoggedUser] = useState(
     getLocalStorage("currentUser")
       ? {
@@ -40,6 +43,8 @@ function App() {
             path="/home"
             children={
               <HomePage
+                setTodoMenu={setTodoMenu}
+                todoMenu={todoMenu}
                 setLoggedUser={setLoggedUser}
                 loggedUser={loggedUser}
                 isAuth={"isAuth"}

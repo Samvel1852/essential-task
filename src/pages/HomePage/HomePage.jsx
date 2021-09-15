@@ -8,18 +8,32 @@ import { Routes } from "../../constants/routes";
 import {
   getLocalStorage,
   removeFromLocalStorage,
+  setLocalStorage,
 } from "../../helpers/localStorage";
 import styles from "./HomePage.module.css";
 
-export default function Todo({ setLoggedUser, loggedUser }) {
+export default function Todo({
+  setLoggedUser,
+  loggedUser,
+  setTodoMenu,
+  todoMenu,
+}) {
   const [todoList, setTodoList] = useState();
-  const [list, setList] = useState([]);
-  const [count, setCount] = useState(0);
+  const [list, setList] = useState(
+    getLocalStorage(`${loggedUser.userName}Todo`)
+      ? getLocalStorage(`${loggedUser.userName}Todo`)
+      : []
+  );
+  //   const [count, setCount] = useState(0);
   const [listInputValue, setListInputValue] = useState("");
-  const [todoMenu, setTodoMenu] = useState([]);
 
   useEffect(() => {
-    setLoggedUser({ ...getLocalStorage("currentUser"), isLogged: true });
+    if (getLocalStorage("currentUser")) {
+      setLoggedUser({
+        ...getLocalStorage("currentUser"),
+        isLogged: true,
+      });
+    }
   }, []);
 
   const onHandleChange = (el) => {
@@ -27,11 +41,11 @@ export default function Todo({ setLoggedUser, loggedUser }) {
   };
 
   const onHandleClick = () => {
-    setCount(count + 1);
+    // setCount(count + 1);
     setList([
       {
         name: todoList,
-        id: count,
+        id: Date.now(),
         readOnly: true,
         edited: false,
         isActive: true,
@@ -43,7 +57,7 @@ export default function Todo({ setLoggedUser, loggedUser }) {
   };
 
   useEffect(() => {
-    localStorage.setItem("todo", JSON.stringify(list));
+    setLocalStorage(`${loggedUser.userName}Todo`, list);
     setTodoMenu(list);
   }, [list]);
 
@@ -94,6 +108,7 @@ export default function Todo({ setLoggedUser, loggedUser }) {
     setLoggedUser({ userName: "", isLogged: false });
     removeFromLocalStorage("currentUser");
   };
+  console.log("loggedUser", loggedUser);
 
   return loggedUser.isLogged ? (
     <div
@@ -145,7 +160,7 @@ export default function Todo({ setLoggedUser, loggedUser }) {
         />
       </div>
       <div className={styles.list}>
-        {todoMenu
+        {todoMenu.length
           ? todoMenu.map((el, i) => (
               <div className={styles.listRow} key={i}>
                 <List
