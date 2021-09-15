@@ -40,19 +40,20 @@ export default function Todo({
     setTodoList(el.target.value);
   };
 
-  const onHandleClick = () => {
+  const onHandleClick = (e) => {
     // setCount(count + 1);
-    setList([
-      {
-        name: todoList,
-        id: Date.now(),
-        readOnly: true,
-        edited: false,
-        isActive: true,
-      },
-      ...list,
-    ]);
-
+    if (todoList) {
+      setList([
+        {
+          name: todoList,
+          id: Date.now(),
+          readOnly: true,
+          edited: false,
+          isActive: true,
+        },
+        ...list,
+      ]);
+    }
     console.log("list", list);
   };
 
@@ -135,7 +136,7 @@ export default function Todo({
         />
         <Button
           style={{ padding: "12px", width: "80px" }}
-          handleClick={() => onHandleClick()}
+          handleClick={(e) => onHandleClick(e)}
           text="Add"
         />
       </div>
