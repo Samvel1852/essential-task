@@ -1,24 +1,54 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useContext } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+
+import "./App.css";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import { getLocalStorage } from "./helpers/localStorage";
+import { UserIsLoggedContext } from "./helpers/userContext";
+
+import { storage } from "./constants/storage";
+import HomePage from "./pages/HomePage/HomePage";
 
 function App() {
+  const [loggedUser, setLoggedUser] = useState({
+    userName: "",
+    isLogged: false,
+  });
+
+  const isAuth = getLocalStorage(storage.isAuth);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <UserIsLoggedContext.Provider value={"I am a context"}>
+        <Router>
+          <Switch>
+            <Route
+              path="/home"
+              children={
+                <HomePage
+                  setLoggedUser={setLoggedUser}
+                  loggedUser={loggedUser}
+                  isAuth={"isAuth"}
+                />
+              }
+            />
+
+            <Route
+              exact
+              path="/"
+              children={
+                <LoginPage setLoggedUser={setLoggedUser} isAuth={isAuth} />
+              }
+            />
+          </Switch>
+        </Router>
+      </UserIsLoggedContext.Provider>
+    </>
   );
 }
 

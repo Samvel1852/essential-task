@@ -1,0 +1,35 @@
+.todo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+h1 {
+  text-align: center;
+  color: white;
+}
+
+.list {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.listRow {
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+.todoNavigation {
+  display: flex;
+  justify-content: center;
+}
+
+.todoNavigation button {
+  width: 150px;
+  font-size: larger;
+}
+
+.inputs {
+  background-color: red;
+}

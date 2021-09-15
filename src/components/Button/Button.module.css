@@ -1,0 +1,17 @@
+.button {
+  width: 80px;
+  padding: 12px;
+  vertical-align: middle;
+  background-color: #bdb76b;
+  margin: 1px;
+  border-color: #808000;
+  border-radius: 5px;
+  color: white;
+}
+
+.button:hover {
+  background-color: #856d4d;
+  color: white;
+  cursor: pointer;
+  border-color: white;
+}
