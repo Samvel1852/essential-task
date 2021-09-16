@@ -90,8 +90,6 @@ export default function Todo({
         }
       })
     );
-
-    console.log(todoMenu);
   };
 
   const onActiveToggle = (todoList) => {
