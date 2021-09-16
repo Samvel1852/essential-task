@@ -1,8 +1,11 @@
+import PropTypes from "prop-types";
+
+import { buttonTypes } from "../../constants/utils";
 import styles from "./Button.module.css";
 
 export default function Button({ handleClick, text, style, editRef }) {
   const handleInputFocus = () => {
-    if (text === "Edit") {
+    if (text === buttonTypes.edit) {
       editRef.current.focus();
     }
   };
@@ -20,3 +23,10 @@ export default function Button({ handleClick, text, style, editRef }) {
     </button>
   );
 }
+
+Button.propTypes = {
+  handleClick: PropTypes.func.isRequired,
+  text: PropTypes.string.isRequired,
+  editRef: PropTypes.object,
+  style: PropTypes.object,
+};

@@ -4,7 +4,15 @@
   color: black;
   vertical-align: middle;
   color: black;
-  border-radius: 5px;
+  border-radius: 16px;
   border: none;
   color: white;
+}
+
+.main::placeholder {
+  color: lightgray;
+}
+
+.error::placeholder {
+  color: red;
 }

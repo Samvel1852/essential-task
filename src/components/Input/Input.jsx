@@ -1,22 +1,28 @@
 import React from "react";
+import classNames from "classnames";
+import PropTypes from "prop-types";
+
 import styles from "./Input.module.css";
+
 export default function Input({
   type,
   onChange,
-  onClick,
   value,
   readOnly,
   style,
   placeholder,
   editRef,
+  isError,
 }) {
   return (
     <input
-      style={style}
-      className={styles.input}
+      className={classNames(
+        styles.input,
+        { [styles.error]: isError },
+        { [styles.main]: !isError }
+      )}
       type={type}
       onChange={onChange}
-      onClick={onClick}
       value={value}
       readOnly={readOnly}
       style={style}
@@ -25,3 +31,13 @@ export default function Input({
     ></input>
   );
 }
+
+Input.propTypes = {
+  type: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string,
+  readOnly: PropTypes.bool.isRequired,
+  style: PropTypes.object,
+  editRef: PropTypes.object,
+  isError: PropTypes.bool,
+};

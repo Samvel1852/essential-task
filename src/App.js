@@ -1,17 +1,14 @@
-import React, { useState, useContext } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import "./App.css";
-import LoginPage from "./pages/LoginPage/LoginPage";
-import { getLocalStorage } from "./helpers/localStorage";
 
+import { getLocalStorage } from "./helpers/localStorage";
 import { storage } from "./constants/storage";
+
+import LoginPage from "./pages/LoginPage/LoginPage";
 import HomePage from "./pages/HomePage/HomePage";
+import { Routes } from "./constants/routes";
 
 function App() {
   const [todoMenu, setTodoMenu] = useState(
@@ -31,41 +28,34 @@ function App() {
           isLogged: false,
         }
   );
-
-  const isAuth = getLocalStorage(storage.isAuth);
-
   return (
     <>
-      {/* <UserIsLoggedContext.Provider value={"I am a context"}> */}
       <Router>
         <Switch>
           <Route
-            path="/home"
+            path={Routes.homePage.url}
             children={
               <HomePage
                 setTodoMenu={setTodoMenu}
                 todoMenu={todoMenu}
                 setLoggedUser={setLoggedUser}
                 loggedUser={loggedUser}
-                isAuth={"isAuth"}
               />
             }
           />
 
           <Route
             exact
-            path="/"
+            path={Routes.loginPage.url}
             children={
               <LoginPage
                 loggedUser={loggedUser}
                 setLoggedUser={setLoggedUser}
-                isAuth={isAuth}
               />
             }
           />
         </Switch>
       </Router>
-      {/* </UserIsLoggedContext.Provider> */}
     </>
   );
 }

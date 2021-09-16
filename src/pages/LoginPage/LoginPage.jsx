@@ -1,32 +1,22 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
+import { useFormik } from "formik";
+import PropTypes from "prop-types";
+
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
-import { useFormik } from "formik";
-import * as yup from "yup";
 
-import { getLocalStorage, setLocalStorage } from "../../helpers/localStorage";
-import { storage } from "../../constants/storage";
+import { setLocalStorage } from "../../helpers/localStorage";
 import { Routes } from "../../constants/routes";
 import { validationLogin } from "../../helpers/formValidation";
-import { isUserValid } from "../../helpers/utils";
 import SignInError from "../../components/Errors/SignInError";
+import { storage } from "../../constants/storage";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -48,17 +38,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const validationSchema = yup.object({
-  email: yup
-    .string("Enter your email")
-    .email("Enter a valid email")
-    .required("Email is required"),
-  password: yup
-    .string("Enter your password")
-    .min(8, "Password should be of minimum 8 characters length")
-    .required("Password is required"),
-});
-
 export default function LoginPage({ setLoggedUser, loggedUser }) {
   const [errorSignUp, setErrorSignUp] = useState(false);
 
@@ -72,7 +51,6 @@ export default function LoginPage({ setLoggedUser, loggedUser }) {
     },
     validationSchema: validationLogin,
     onSubmit: (values) => {
-      console.log(values);
       const users = {
         user1: {
           name: "John",
@@ -95,10 +73,10 @@ export default function LoginPage({ setLoggedUser, loggedUser }) {
           values.password === users.user2.password)
       ) {
         if (values.userName === users.user1.userName) {
-          setLocalStorage("currentUser", users.user1);
+          setLocalStorage(storage.currentUser, users.user1);
           setLoggedUser({ userName: users.user1.userName, isLogged: true });
         } else {
-          setLocalStorage("currentUser", users.user2);
+          setLocalStorage(storage.currentUser, users.user2);
           setLoggedUser({ userName: users.user2.userName, isLogged: true });
         }
         history.push(`${Routes.homePage.url}`);
@@ -128,7 +106,7 @@ export default function LoginPage({ setLoggedUser, loggedUser }) {
             margin="normal"
             fullWidth
             id="userName"
-            label="userName"
+            label="User Name"
             name="userName"
             autoComplete="userName"
             autoFocus
@@ -173,3 +151,8 @@ export default function LoginPage({ setLoggedUser, loggedUser }) {
     </Container>
   );
 }
+
+LoginPage.propTypes = {
+  setLoggedUser: PropTypes.func.isRequired,
+  loggedUser: PropTypes.object.isRequired,
+};

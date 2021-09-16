@@ -1,16 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect } from "react-router";
+import PropTypes from "prop-types";
+
+import styles from "./HomePage.module.css";
 
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
-import List from "../../components/List/ListItem";
+import ListItem from "../../components/ListItem/ListItem";
+
 import { Routes } from "../../constants/routes";
+import { storage } from "../../constants/storage";
+import { buttonTypes, filterTypes } from "../../constants/utils";
 import {
   getLocalStorage,
   removeFromLocalStorage,
   setLocalStorage,
 } from "../../helpers/localStorage";
-import styles from "./HomePage.module.css";
 
 export default function Todo({
   setLoggedUser,
@@ -18,58 +23,50 @@ export default function Todo({
   setTodoMenu,
   todoMenu,
 }) {
-  const [errorPlaceholder, setErrorPlaceholder] = useState({
-    error: "Please fill the field",
-    visible: false,
-  });
+  const [isPlaceholderError, setIsPlaceholderError] = useState(false);
   const [todoList, setTodoList] = useState();
   const [list, setList] = useState(
     getLocalStorage(`${loggedUser.userName}Todo`)
       ? getLocalStorage(`${loggedUser.userName}Todo`)
       : []
   );
-  //   const [count, setCount] = useState(0);
-  //   const [listInputValue, setListInputValue] = useState("");
-  //   const editRef = useRef();
 
   useEffect(() => {
-    if (getLocalStorage("currentUser")) {
+    if (getLocalStorage(storage.currentUser)) {
       setLoggedUser({
-        ...getLocalStorage("currentUser"),
+        ...getLocalStorage(storage.currentUser),
         isLogged: true,
       });
     }
   }, []);
 
+  useEffect(() => {
+    setLocalStorage(`${loggedUser.userName}Todo`, list);
+    setTodoMenu(list);
+  }, [list]);
+
   const onHandleChange = (el) => {
     setTodoList(el.target.value);
-    setErrorPlaceholder({ ...errorPlaceholder, visible: false });
+    setIsPlaceholderError(false);
   };
 
-  const onHandleClick = (e) => {
-    // setCount(count + 1);
+  const onHandleAdd = () => {
     if (todoList) {
       setList([
         {
           name: todoList,
           id: Date.now(),
           readOnly: true,
-          edited: false,
+          editable: false,
           isActive: true,
         },
         ...list,
       ]);
     } else {
-      setErrorPlaceholder({ ...errorPlaceholder, visible: true });
+      setIsPlaceholderError({ ...isPlaceholderError, visible: true });
     }
     setTodoList("");
-    console.log("list", list);
   };
-
-  useEffect(() => {
-    setLocalStorage(`${loggedUser.userName}Todo`, list);
-    setTodoMenu(list);
-  }, [list]);
 
   const delateInput = (id) => {
     setList(list.filter((el) => id !== el.id));
@@ -84,14 +81,12 @@ export default function Todo({
   };
 
   const onEditInput = (todoList) => {
-    // console.log("editRef", editRef);
     setList(
       todoMenu.map((todo) => {
-        if (todo.id === todoList.id && todo.edited === false) {
-          //   editRef.current.focus();
-          return { ...todo, readOnly: false, edited: true };
+        if (todo.id === todoList.id && todo.editable === false) {
+          return { ...todo, readOnly: false, editable: true };
         } else {
-          return { ...todo, readOnly: true, edited: false };
+          return { ...todo, readOnly: true, editable: false };
         }
       })
     );
@@ -121,9 +116,8 @@ export default function Todo({
 
   const handleLogout = () => {
     setLoggedUser({ userName: "", isLogged: false });
-    removeFromLocalStorage("currentUser");
+    removeFromLocalStorage(storage.currentUser);
   };
-  console.log("loggedUser", loggedUser);
 
   return loggedUser.isLogged ? (
     <div
@@ -147,70 +141,76 @@ export default function Todo({
         <Input
           style={{ backgroundColor: "#BDB76B" }}
           onChange={(el) => onHandleChange(el)}
-          value={todoList}
-          placeholder={!errorPlaceholder.visible ? "" : errorPlaceholder.error}
+          value={todoList || ""}
+          placeholder={
+            isPlaceholderError ? "Please fill the field" : "Enter your task"
+          }
+          isError={isPlaceholderError}
         />
         <Button
           style={{ padding: "12px", width: "80px" }}
-          handleClick={(e) => onHandleClick(e)}
-          text="Add"
+          handleClick={(e) => onHandleAdd(e)}
+          text={buttonTypes.add}
         />
       </div>
       <div className={styles.todoNavigation}>
         <Button
           handleClick={() => showAllInputs()}
-          text={`All:  ${list.length}`}
+          text={`${filterTypes.all}:  ${list.length}`}
         />
         <Button
           handleClick={() => showActiveInputs()}
-          text={`Active: ${
+          text={`${filterTypes.active}: ${
             list.filter((todo) => todo.isActive === true).length
           } `}
           style={{ backgroundColor: "#a99a86" }}
         />
         <Button
           handleClick={() => showCompletedInputs()}
-          text={`Completed: ${
+          text={`${filterTypes.completed}: ${
             list.filter((todo) => todo.isActive === false).length
           } `}
           style={{ backgroundColor: "#c3b091" }}
         />
       </div>
       <div className={styles.list}>
-        {
-          (console.log("todoMenu", todoMenu),
-          todoMenu.length
-            ? todoMenu.map((el, i) => (
-                <div className={styles.listRow} key={i}>
-                  <List
-                    onChange={(evt) => changeListInput(evt, el)}
-                    onEdit={() => onEditInput(el)}
-                    onDelate={() => delateInput(el.id)}
-                    onActiveToggle={() => onActiveToggle(el)}
-                    edit={el.edited ? "Save" : "Edit"}
-                    delate="Delate"
-                    save="Save"
-                    done={el.isActive ? "Done" : "Undone"}
-                    value={el.name}
-                    readOnly={el.readOnly}
-                    className={styles.inputs}
-                    style={
-                      el.isActive === false
-                        ? {
-                            backgroundColor: "#c3b091",
-                            textDecoration: "line-through",
-                          }
-                        : { backgroundColor: "#a99a86" }
-                    }
-                    // editRef={editRef}
-                  />
-                </div>
-              ))
-            : null)
-        }
+        {todoMenu.length
+          ? todoMenu.map((el, i) => (
+              <div className={styles.listRow} key={i}>
+                <ListItem
+                  onChange={(evt) => changeListInput(evt, el)}
+                  onEdit={() => onEditInput(el)}
+                  onDelate={() => delateInput(el.id)}
+                  onActiveToggle={() => onActiveToggle(el)}
+                  edit={el.editable ? buttonTypes.save : buttonTypes.edit}
+                  delate={buttonTypes.delete}
+                  save={buttonTypes.save}
+                  done={el.isActive ? buttonTypes.done : buttonTypes.undone}
+                  value={el.name}
+                  readOnly={el.readOnly}
+                  className={styles.inputs}
+                  style={
+                    el.isActive === false
+                      ? {
+                          backgroundColor: "#c3b091",
+                          textDecoration: "line-through",
+                        }
+                      : { backgroundColor: "#a99a86" }
+                  }
+                />
+              </div>
+            ))
+          : null}
       </div>
     </div>
   ) : (
     <Redirect to={Routes.loginPage.url} />
   );
 }
+
+Todo.propTypes = {
+  setLoggedUser: PropTypes.func.isRequired,
+  setTodoMenu: PropTypes.func.isRequired,
+  loggedUser: PropTypes.object.isRequired,
+  todoMenu: PropTypes.arrayOf(PropTypes.object).isRequired,
+};

@@ -2,7 +2,7 @@ import Input from "../Input/Input";
 import Button from "../Button/Button";
 import React, { createContext, useRef } from "react";
 
-export default function List({
+export default function ListItem({
   value,
   edit,
   delate,
@@ -13,7 +13,6 @@ export default function List({
   style,
   done,
   onActiveToggle,
-  //   editRef,
 }) {
   const editRef = useRef();
 
