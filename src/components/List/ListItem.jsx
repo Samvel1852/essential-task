@@ -1,5 +1,6 @@
 import Input from "../Input/Input";
 import Button from "../Button/Button";
+import React, { createContext, useRef } from "react";
 
 export default function List({
   value,
@@ -9,11 +10,13 @@ export default function List({
   onEdit,
   onChange,
   readOnly,
-  save,
   style,
   done,
   onActiveToggle,
+  //   editRef,
 }) {
+  const editRef = useRef();
+
   return (
     <div>
       <Input
@@ -21,9 +24,9 @@ export default function List({
         readOnly={readOnly}
         value={value}
         onChange={onChange}
+        editRef={editRef}
       />
-      <Button text={edit} handleClick={onEdit} />
-      {/* <Button text={save} handleClick={onSave} /> */}
+      <Button editRef={editRef} text={edit} handleClick={onEdit} />
       <Button text={delate} handleClick={onDelate} />
       <Button text={done} handleClick={onActiveToggle} />
     </div>

@@ -5,11 +5,15 @@
 }
 
 .title {
+  font-size: larger;
+  font-weight: bolder;
   text-align: center;
   color: white;
 }
 
 .user {
+  font-size: larger;
+  font-weight: bolder;
   text-align: center;
 }
 

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Redirect } from "react-router";
 
 import Button from "../../components/Button/Button";
 import Input from "../../components/Input/Input";
-import List from "../../components/List/List";
+import List from "../../components/List/ListItem";
 import { Routes } from "../../constants/routes";
 import {
   getLocalStorage,
@@ -29,7 +29,8 @@ export default function Todo({
       : []
   );
   //   const [count, setCount] = useState(0);
-  const [listInputValue, setListInputValue] = useState("");
+  //   const [listInputValue, setListInputValue] = useState("");
+  //   const editRef = useRef();
 
   useEffect(() => {
     if (getLocalStorage("currentUser")) {
@@ -83,13 +84,18 @@ export default function Todo({
   };
 
   const onEditInput = (todoList) => {
+    // console.log("editRef", editRef);
     setList(
-      todoMenu.map((todo) =>
-        todo.id === todoList.id && todo.edited === false
-          ? { ...todo, readOnly: false, edited: true }
-          : { ...todo, readOnly: true, edited: false }
-      )
+      todoMenu.map((todo) => {
+        if (todo.id === todoList.id && todo.edited === false) {
+          //   editRef.current.focus();
+          return { ...todo, readOnly: false, edited: true };
+        } else {
+          return { ...todo, readOnly: true, edited: false };
+        }
+      })
     );
+
     console.log(todoMenu);
   };
 
@@ -196,6 +202,7 @@ export default function Todo({
                           }
                         : { backgroundColor: "#a99a86" }
                     }
+                    // editRef={editRef}
                   />
                 </div>
               ))

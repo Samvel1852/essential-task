@@ -8,6 +8,7 @@ export default function Input({
   readOnly,
   style,
   placeholder,
+  editRef,
 }) {
   return (
     <input
@@ -20,6 +21,7 @@ export default function Input({
       readOnly={readOnly}
       style={style}
       placeholder={placeholder}
+      ref={editRef}
     ></input>
   );
 }
